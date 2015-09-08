@@ -1,0 +1,17 @@
+sudo: required
+services:
+  - docker
+language: python
+python:
+  - "2.7"
+  - "3.4"
+env:
+  matrix:
+    - DJANGO_SETTINGS_MODULE=settings.sqlite_only
+    - DJANGO_SETTINGS_MODULE=settings.mysql_only
+    - DJANGO_SETTINGS_MODULE=settings.postgresql_only
+script:
+  - ./manage.py db_quick_setup
+  - sleep 60
+  - ./manage.py migrate
+  - ./manage.py db_quick_setup
