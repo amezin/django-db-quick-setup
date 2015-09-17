@@ -50,9 +50,14 @@ class Backend(object):
         self.internal_port = str(self.__class__.default_port) + '/tcp'
         self.host_port = str(self.port) + '/tcp'
 
+        self.docker_host = find_docker_host()
+        if getaddrinfo(self.docker_host, None) == \
+                getaddrinfo('127.0.0.1', None):
+            self.host_port = ('127.0.0.1', self.host_port)
+
     def validate(self):
         if (getaddrinfo(self.host, self.port) !=
-                getaddrinfo(find_docker_host(), self.port)):
+                getaddrinfo(self.docker_host, self.port)):
             self.write("'HOST' points to a machine other than where Docker is")
 
     def is_port_exposed(self, image_id):
@@ -87,7 +92,14 @@ class Backend(object):
         port_binding = port_bindings.get(self.internal_port, None)
         if not port_binding:
             return False
-        if port_binding[0].get('HostPort') != self.host_port:
+        host_port = self.host_port
+        host_ip = None
+        if isinstance(host_port, tuple):
+            host_ip = host_port[0]
+            host_port = host_port[1]
+        if port_binding[0].get('HostPort') != host_port:
+            return False
+        if host_ip and port_binding[0].get('HostIp') != host_ip:
             return False
 
         env = info.get('Config').get('Env')
