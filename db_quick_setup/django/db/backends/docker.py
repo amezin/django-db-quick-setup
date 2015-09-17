@@ -86,24 +86,37 @@ class Backend(object):
             images = self.get_images()
         return images
 
-    def is_good_container(self, container_id, images):
+    def is_good_container(self, container_id, images, show_diff=False):
         info = self.docker.inspect_container(container_id)
 
         if info.get('Image') not in images:
+            if show_diff:
+                self.write("Image '{}' isn't in '{}'".format(info.get('Image'),
+                                                             images))
             return False
 
         port_bindings = info.get('HostConfig').get('PortBindings')
         port_binding = port_bindings.get(self.internal_port, None)
         if not port_binding:
+            if show_diff:
+                self.write("Port binding doesn't exist!")
             return False
         host_port = self.host_port
         host_ip = None
         if isinstance(host_port, tuple):
             host_ip = host_port[0]
             host_port = host_port[1]
-        if port_binding[0].get('HostPort') != host_port:
+        real_host_port = port_binding[0].get('HostPort')
+        if real_host_port != host_port:
+            if show_diff:
+                self.write("HostPort: '{}' != '{}'".format(real_host_port,
+                                                           host_port))
             return False
-        if host_ip and port_binding[0].get('HostIp') != host_ip:
+        real_host_ip = port_binding[0].get('HostIp')
+        if host_ip and real_host_ip != host_ip:
+            if show_diff:
+                self.write("HostIp: '{}' != '{}'".format(real_host_ip,
+                                                         host_ip))
             return False
 
         env = info.get('Config').get('Env')
@@ -115,13 +128,13 @@ class Backend(object):
     def setup(self):
         self.validate()
         images = self.get_images_or_pull()
-        containers = [i for i in self.docker.containers(all=True)
+        containers = [i.get('Id') for i in self.docker.containers(all=True)
                       if self.is_good_container(i.get('Id'), images)]
-        online = [i for i in self.docker.containers()
-                  if i in containers]
+        online = [i.get('Id') for i in self.docker.containers()
+                  if i.get('Id') in containers]
         if online:
             self.write("Container '%s' is already running. Nothing to do." %
-                       online[0].get('Id'))
+                       online[0])
             return
         if containers:
             container = containers[0]
@@ -132,7 +145,10 @@ class Backend(object):
             container = self.docker.create_container(images[0],
                                                      environment=self.env,
                                                      host_config=host_config)
-        container = container.get('Id')
+            container = container.get('Id')
+            if not self.is_good_container(container, images, True):
+                self.write("Container %s isn't good!" % container)
+                return False
         self.write("Starting container '%s'..." % container)
         self.docker.start(container)
 
