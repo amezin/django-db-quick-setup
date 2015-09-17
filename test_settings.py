@@ -1,3 +1,5 @@
+import os
+
 SECRET_KEY = 'secret'
 
 MIDDLEWARE_CLASSES = (
@@ -19,3 +21,5 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'db_quick_setup'
 )
+
+DOCKER_PRIVILEGED = bool(os.getenv('TRAVIS', 'false'))

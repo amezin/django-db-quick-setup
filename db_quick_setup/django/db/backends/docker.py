@@ -141,7 +141,9 @@ class Backend(object):
         else:
             self.write("Creating a new container...")
             port_bindings = {self.internal_port: self.host_port}
-            host_config = create_host_config(port_bindings=port_bindings)
+            privileged = getattr(settings, 'DOCKER_PRIVILEGED', False)
+            host_config = create_host_config(port_bindings=port_bindings,
+                                             privileged=privileged)
             container = self.docker.create_container(images[0],
                                                      environment=self.env,
                                                      host_config=host_config)
