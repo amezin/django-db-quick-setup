@@ -10,8 +10,11 @@ env:
     - DJANGO_SETTINGS_MODULE=settings.sqlite_only
     - DJANGO_SETTINGS_MODULE=settings.mysql_only
     - DJANGO_SETTINGS_MODULE=settings.postgresql_only
+before_script:
+  - sudo service docker restart
+  - sleep 10
 script:
   - ./manage.py db_quick_setup
-  - sleep 60
+  - sleep 20
   - ./manage.py migrate
   - ./manage.py db_quick_setup
