@@ -16,5 +16,7 @@ before_script:
 script:
   - ./manage.py db_quick_setup
   - sleep 20
+  - docker ps -a
+  - if [[ -z "$(docker ps -q)" ]]; then docker logs "$(docker ps -q -n=1)" || true; fi
   - ./manage.py migrate
   - ./manage.py db_quick_setup
