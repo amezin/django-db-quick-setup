@@ -65,21 +65,25 @@ class Backend(object):
         return self.internal_port in info.get('Config').get('ExposedPorts')
 
     def get_images(self):
-        images = [i.get('Id') for i in self.docker.images()
-                  if (self.image in i.get('RepoTags')
-                      or self.image == i.get('Id'))
-                  and self.is_port_exposed(i.get('Id'))]
+        return [i.get('Id') for i in self.docker.images()
+                if (self.image in i.get('RepoTags')
+                    or self.image == i.get('Id'))
+                and self.is_port_exposed(i.get('Id'))]
+
+    def get_images_or_pull(self):
+        images = self.get_images()
         if not images:
             self.write("Image '%s' is not found. Trying to pull." % self.image)
-            image_id = None
+            prev_status = None
             for output in self.docker.pull(self.image, stream=True):
                 if six.PY3:
                     output = output.decode('utf-8')
                 output = loads(output)
-                image_id = output.get('id', image_id)
-                self.write(output.get('status'))
-            if self.is_port_exposed(image_id):
-                images = [image_id]
+                status = output.get('status')
+                if status != prev_status:
+                    self.write(status)
+                    prev_status = status
+            images = self.get_images()
         return images
 
     def is_good_container(self, container_id, images):
@@ -110,7 +114,7 @@ class Backend(object):
 
     def setup(self):
         self.validate()
-        images = self.get_images()
+        images = self.get_images_or_pull()
         containers = [i for i in self.docker.containers(all=True)
                       if self.is_good_container(i.get('Id'), images)]
         online = [i for i in self.docker.containers()
