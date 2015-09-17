@@ -20,3 +20,14 @@ script:
   - if [[ -z "$(docker ps -q)" ]]; then docker logs "$(docker ps -q -n=1)" || true; fi
   - ./manage.py migrate
   - ./manage.py db_quick_setup
+  - sudo service docker restart
+  - sleep 10
+  - ./manage.py db_quick_setup
+  - sleep 10
+  - ./manage.py migrate
+  - sudo service docker restart
+  - sleep 10
+  - if [[ ! -z "$(docker ps -q -n=1)" ]]; then docker rm "$(docker ps -q -n=1)"; fi
+  - ./manage.py db_quick_setup
+  - sleep 10
+  - ./manage.py migrate
