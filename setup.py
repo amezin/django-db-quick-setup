@@ -34,4 +34,4 @@ setup(name='django-db-quick-setup',
       use_scm_version=True,
       setup_requires=['setuptools_scm'],
       install_requires=['Django', 'docker-py'],
-      packages=find_packages(exclude=['settings']))
+      packages=find_packages(include=['db_quick_setup', 'db_quick_setup.*']))
