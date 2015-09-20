@@ -23,7 +23,24 @@ variables.
 Usage
 -----
 
+.. code:: shell
+
     ./manage.py db_quick_setup
+
+``'db_quick_setup'`` should be added to ``INSTALLED_APPS``:
+
+.. code:: python
+
+    INSTALLED_APPS = (
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.sites',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+        'django.contrib.admin',
+        'db_quick_setup'
+    )
 
 ``'HOST'`` in database settings should point to Docker hostname/IP. You can
 use `find_docker_host()` to auto-detect it.
