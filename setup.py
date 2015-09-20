@@ -9,7 +9,8 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name='django-db-quick-setup',
-      description='Create and start MySQL/PostgreSQL containers with a single management command',
+      description='Create and start MySQL/PostgreSQL containers with a single '
+      'management command',
       long_description=long_description,
       keywords='django mysql postgresql docker',
       classifiers=[

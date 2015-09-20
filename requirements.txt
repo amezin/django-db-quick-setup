@@ -1,8 +1,10 @@
 Django==1.8.4
 docker-py==1.4.0
 mysqlclient==1.3.6
+pep8==1.6.2
 psycopg2==2.6.1
 requests==2.7.0
+setuptools-pep8==0.9.0
 setuptools-scm==1.8.0
 six==1.9.0
 websocket-client==0.32.0

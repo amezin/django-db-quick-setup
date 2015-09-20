@@ -66,9 +66,9 @@ class Backend(object):
 
     def get_images(self):
         return [i.get('Id') for i in self.docker.images()
-                if (self.image in i.get('RepoTags')
-                    or self.image == i.get('Id'))
-                and self.is_port_exposed(i.get('Id'))]
+                if (self.image in i.get('RepoTags') or
+                    self.image == i.get('Id')) and
+                self.is_port_exposed(i.get('Id'))]
 
     def get_images_or_pull(self):
         images = self.get_images()

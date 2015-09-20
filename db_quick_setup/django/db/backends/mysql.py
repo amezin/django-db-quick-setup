@@ -1,5 +1,6 @@
 from .docker import Backend as DockerBackend
 
+
 class Backend(DockerBackend):
     image_setting = 'DOCKER_MYSQL_IMAGE'
     image_default = 'mysql:latest'

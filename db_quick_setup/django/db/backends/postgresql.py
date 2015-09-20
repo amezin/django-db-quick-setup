@@ -1,5 +1,6 @@
 from .docker import Backend as DockerBackend
 
+
 class Backend(DockerBackend):
     image_setting = 'DOCKER_POSTGRES_IMAGE'
     image_default = 'postgres:latest'
