@@ -4,6 +4,9 @@ django-db-quick-setup
 .. image:: https://travis-ci.org/amezin/django-db-quick-setup.svg
     :target: https://travis-ci.org/amezin/django-db-quick-setup
 
+.. image:: https://img.shields.io/pypi/v/django-db-quick-setup.svg
+    :target: https://pypi.python.org/pypi/django-db-quick-setup
+
 Create and start MySQL/PostgreSQL containers with a single management command.
 
 * If an image isn't available, it will be pulled.
@@ -16,7 +19,7 @@ Necessary settings are taken from settings.py.
 * SQLite databases are ignored.
 * For MySQL and PostgreSQL, one container is created per database.
 
-Also, Docker settings are picked up from standard ``DOCKER\_\*`` environment
+Also, Docker settings are picked up from standard ``DOCKER_*`` environment
 variables.
 
 
@@ -60,8 +63,12 @@ use `find_docker_host()` to auto-detect it.
         }
     }
 
-``'NAME'``, ``'USER'``, ``'PASSWORD'`` and ``'PORT'`` can have arbitrary names,
+``'NAME'``, ``'USER'``, ``'PASSWORD'`` and ``'PORT'`` can have arbitrary values,
 the container will be configured accordingly.
+
+* For MySQL ``'NAME'`` and ``'USER'`` should have the same value, it's a
+limitation of the official image.
+
 
 Settings
 --------
@@ -72,7 +79,8 @@ official image - ``mysql:latest``.
 ``DOCKER_POSTGRES_IMAGE``: Docker image for PostgreSQL databases. Default is
 the official image - ``postgresql:latest``.
 
-``DOCKER_ASSERT_HOSTNAME``: look at Docker documentation.
+``DOCKER_ASSERT_HOSTNAME``: enable SSL hostname validation (boolean). ``True``
+by default.
 
 ``DOCKER_PRIVILEGED``: create privileged containers. Currently used as a
 workaround for permission problems on Travis CI. It is disabled by default,
