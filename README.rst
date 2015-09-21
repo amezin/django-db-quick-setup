@@ -67,7 +67,7 @@ use `find_docker_host()` to auto-detect it.
 the container will be configured accordingly.
 
 * For MySQL ``'NAME'`` and ``'USER'`` should have the same value, it's a
-limitation of the official image.
+  limitation of the official image.
 
 
 Settings

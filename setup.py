@@ -12,7 +12,7 @@ setup(name='django-db-quick-setup',
       description='Create and start MySQL/PostgreSQL containers with a single '
       'management command',
       long_description=long_description,
-      keywords='django mysql postgresql docker',
+      keywords=['django', 'mysql', 'postgresql', 'docker'],
       classifiers=[
           'Development Status :: 3 - Alpha',
           'Environment :: Web Environment',
